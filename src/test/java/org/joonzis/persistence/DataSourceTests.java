@@ -29,7 +29,6 @@ public class DataSourceTests {
 	@Setter(onMethod_ = @Autowired)
 	private DataSource dataSource;
 	
-	
 	//테스트용 메소드를 만드려면 @Test 어노테이션 필요
 	@Test
 	public void testConnection() {
