@@ -23,8 +23,7 @@ public class BoardController {
 	/*
 	 * spring에서는 GetMapping을 사용하는 경우, 
 	 * 메소드의 return 값이 void인경우에 알아서 같은 경로의 jsp를 찾아간다.
-	 * 
-	*/
+	 */
 	@GetMapping("/list")
 	public String list(Model model) {
 		log.info("list");
@@ -38,9 +37,12 @@ public class BoardController {
 		log.info("register....." + vo);
 		service.register(vo);
 		
-		rttr.addFlashAttribute("result", vo);
+		rttr.addFlashAttribute("result", "ok");
 		return "redirect:/board/list";
 	}
 	
-	
+	@GetMapping("/register")
+	public String register() {
+		return "board/register";
+	}
 }
