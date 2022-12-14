@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
@@ -44,5 +45,51 @@ public class BoardController {
 	@GetMapping("/register")
 	public String register() {
 		return "board/register";
+	}
+	
+	@GetMapping("/get")
+	public String get(@RequestParam("bno") long bno, Model model) {
+		log.info("get...");
+		
+		model.addAttribute("vo", service.get(bno));
+		return "/board/get";
+	}
+	
+	@GetMapping("/modify")
+	public String modify(@RequestParam("bno") long bno, Model model) {
+		log.info("/modify...");
+		
+		model.addAttribute("vo", service.get(bno));
+		return "/board/modify";
+	}
+	
+	//수정 // 삭제 기능 필요
+	//메소드 2개 작성
+	// 수정 or 삭제 후에 list로 이동
+	// list에 가기 전에 result값을 success를 넣어주도록 하자
+	@PostMapping("/modify")
+	public String modify(BoardVO vo, RedirectAttributes rttr) {
+		log.info("modify....");
+		
+		boolean result = service.modify(vo);
+		if (result) {
+			rttr.addFlashAttribute("result", "sucess");
+		} else {
+			rttr.addFlashAttribute("result", "");
+		}
+		return "redirect:/board/list";
+	}
+	
+	@PostMapping("")
+	public String remove(@RequestParam("bno") long bno, RedirectAttributes rttr) {
+		log.info("remove...");
+		
+		boolean result = service.remove(bno);
+		if (result) {
+			rttr.addFlashAttribute("result", "sucess");
+		} else {
+			rttr.addFlashAttribute("result", "");
+		}
+		return "redirect:/board/list";
 	}
 }

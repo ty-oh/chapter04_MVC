@@ -5,7 +5,7 @@
 
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">Register</h1>
+		<h1 class="page-header">게시글 등록</h1>
 	</div>
 	<!-- /.col-lg-12 -->
 </div>
@@ -23,7 +23,7 @@
 						<input class="form-control" name="title"/>
 					</div>
 					<div class="form-group">
-						<label>Text area</label>
+						<label>Textarea</label>
 						<textarea rows="3" class="form-control" name="content"></textarea>
 					</div>
 					<div class="form-group">
