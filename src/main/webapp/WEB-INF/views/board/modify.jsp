@@ -56,15 +56,20 @@
 		
 		$("button").on("click", function(e) {
 			e.preventDefault();
+			operForm.append('<input type="hidden" name="pageNum" value="' + ${cri.pageNum } + '"/>');
+			operForm.append('<input type="hidden" name="amount" value="' + ${cri.amount } + '"/>');
 			
 			var operation = $(this).data("oper");
 			if (operation == 'remove'){
 				operForm.attr("action", "/board/remove");
+				
 			} else if (operation == 'list') {
+				operForm.empty(); //내부 값 비워주기
+				operForm.append('<input type="hidden" name="pageNum" value="' + ${cri.pageNum } + '"/>');
+				operForm.append('<input type="hidden" name="amount" value="' + ${cri.amount } + '"/>');
+				operForm.append('<input type="hidden" name="bno" value="'+ ${vo.bno} + '">');
 				operForm.attr("action", "/board/list");
 				operForm.attr("method", "get");
-				operForm.empty(); //내부 값 비워주기
-				
 			}
 			// 어차피 기본 action이 'board/modify'이기 때문에 굳이 modify는 조건문으로 체크를 해줄 필요가 없다.
 			operForm.submit();

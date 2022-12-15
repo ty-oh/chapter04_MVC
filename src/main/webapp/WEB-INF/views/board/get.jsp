@@ -38,10 +38,12 @@
 				<button id="modalModBtn" class="btn btn-warning">수정</button>
 				<!-- <button id="modalRemoveBtn" class="btn btn-danger">삭제</button> -->
 				<!-- <button id="modalRegisterBtn" class="btn btn-primary">등록</button> -->
-				<button id="modalCloseBtn" class="btn btn-default">취소</button>
+				<button id="moveListBtn" class="btn btn-default">목록</button>
 			</div>
 			<form action="/board/modify" method="get" id="openForm">
-				<input type="hidden" name="bno" value="${vo.bno }">
+			<%-- <input type="hidden" name="bno" value="${vo.bno }"> --%>
+				<input type="hidden" name="amount" value="${cri.amount }"/>
+				<input type="hidden" name="pageNum" value="${cri.pageNum }"/>
 			</form>
 			
 			<!-- /.panel-body -->
@@ -56,6 +58,12 @@
 	$(function() {
 		var openForm = $("#openForm");
 		$('#modalModBtn').click(function(e) {
+			openForm.append('<input type="hidden" name="bno" value="'+ ${vo.bno} + '">');
+			openForm.submit();
+		});
+		
+		$('#moveListBtn').click(function(e) {
+			openForm.attr('action', '/board/list');
 			openForm.submit();
 		});
 	});

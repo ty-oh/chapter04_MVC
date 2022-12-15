@@ -6,7 +6,9 @@ import org.joonzis.domain.PageDTO;
 import org.joonzis.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,15 +52,15 @@ public class BoardController {
 	}
 	
 	@GetMapping("/get")
-	public String get(@RequestParam("bno") long bno, Model model) {
+	public String get(@RequestParam("bno") long bno, Criteria cri, Model model) {
 		log.info("get...");
-		
 		model.addAttribute("vo", service.get(bno));
+		model.addAttribute("cri", cri);
 		return "/board/get";
 	}
 	
 	@GetMapping("/modify")
-	public String modify(@RequestParam("bno") long bno, Model model) {
+	public String modify(@RequestParam("bno") long bno, @ModelAttribute("cri") Criteria cri , Model model) {
 		log.info("/modify...");
 		
 		model.addAttribute("vo", service.get(bno));
@@ -72,7 +74,7 @@ public class BoardController {
 	// @GetMapping 의 리턴값은 jsp이다.
 	// @PostMapping의 리턴은 url이다.
 	@PostMapping("/modify")
-	public String modify(BoardVO vo, RedirectAttributes rttr) {
+	public String modify(BoardVO vo, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
 		log.info("/modify...." + vo);
 		
 		boolean result = service.modify(vo);
@@ -81,11 +83,13 @@ public class BoardController {
 		} else {
 			rttr.addFlashAttribute("result", "");
 		}
+		rttr.addAttribute("pageNum", cri.getPageNum());
+		rttr.addAttribute("amount", cri.getAmount());
 		return "redirect:/board/list";
 	}
 	
 	@PostMapping("/remove")
-	public String remove(@RequestParam("bno") long bno, RedirectAttributes rttr) {
+	public String remove(@RequestParam("bno") long bno, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
 		log.info("remove...");
 		
 		boolean result = service.remove(bno);
@@ -94,6 +98,8 @@ public class BoardController {
 		} else {
 			rttr.addFlashAttribute("result", "");
 		}
+		rttr.addAttribute("pageNum", cri.getPageNum());
+		rttr.addAttribute("amount", cri.getAmount());
 		return "redirect:/board/list";
 	}
 }
