@@ -34,6 +34,12 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public int getTotalCount() {
+		log.info("getTotalCount.....");
+		return mapper.getTotalCount();
+	}
+	
+	@Override
 	public void register(BoardVO vo) {
 		log.info("register....." + vo);
 		mapper.insert(vo);

@@ -6,7 +6,6 @@ import org.joonzis.domain.PageDTO;
 import org.joonzis.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,8 +31,11 @@ public class BoardController {
 	@GetMapping("/list")
 	public String list(Criteria cri , Model model) {
 		log.info("list..." + cri);
+		
+		int total = service.getTotalCount();
+		log.info("total..." + total);
 		model.addAttribute("list", service.getListWithPaging(cri));
-		model.addAttribute("pageMaker", new PageDTO(cri, 123));
+		model.addAttribute("pageMaker", new PageDTO(cri, total));
 		return "board/list";
 	}
 	
@@ -60,21 +62,19 @@ public class BoardController {
 	}
 	
 	@GetMapping("/modify")
-	public String modify(@RequestParam("bno") long bno, @ModelAttribute("cri") Criteria cri , Model model) {
+	public String modify(@RequestParam("bno") long bno,
+						 @ModelAttribute("cri") Criteria cri , Model model) {
 		log.info("/modify...");
 		
 		model.addAttribute("vo", service.get(bno));
 		return "/board/modify";
 	}
 	
-	//수정 // 삭제 기능 필요
-	//메소드 2개 작성
-	// 수정 or 삭제 후에 list로 이동
 	// list에 가기 전에 result값을 success를 넣어주도록 하자
 	// @GetMapping 의 리턴값은 jsp이다.
 	// @PostMapping의 리턴은 url이다.
 	@PostMapping("/modify")
-	public String modify(BoardVO vo, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
+	public String modify(BoardVO vo, Criteria cri, RedirectAttributes rttr) {
 		log.info("/modify...." + vo);
 		
 		boolean result = service.modify(vo);
@@ -89,7 +89,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/remove")
-	public String remove(@RequestParam("bno") long bno, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
+	public String remove(long bno, Criteria cri, RedirectAttributes rttr) {
 		log.info("remove...");
 		
 		boolean result = service.remove(bno);

@@ -5,10 +5,17 @@
 	<title>Home</title>
 </head>
 <body>
-<h1>
-	Hello world!  
-</h1>
-
-<P>  The time on the server is ${serverTime}. </P>
+	<form action="/board/list" method="get" id="startForm">
+		<input type="hidden" name="pageNum" value="1">
+		<input type="hidden" name="amount" value="10">
+	</form>
+	<script type="text/javascript">
+		document.getElementById('startForm').submit();
+	</script>
+	<h1>
+		Hello world!  
+	</h1>
+	
+	<P>  The time on the server is ${serverTime}. </P>
 </body>
 </html>

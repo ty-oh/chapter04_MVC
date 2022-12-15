@@ -56,6 +56,12 @@ public class BoardMapperTests {
 //		}
 //	}
 	
+//	@Test
+//	public void testGetTotalCount() {
+//		int count = mapper.getTotalCount();
+//		log.info(count);
+//	}
+	
 	
 //	@Test
 //	public void testInsert() {
