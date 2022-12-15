@@ -2,6 +2,7 @@ package org.joonzis.controller;
 
 import org.joonzis.domain.BoardVO;
 import org.joonzis.domain.Criteria;
+import org.joonzis.domain.PageDTO;
 import org.joonzis.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +31,7 @@ public class BoardController {
 	public String list(Criteria cri , Model model) {
 		log.info("list..." + cri);
 		model.addAttribute("list", service.getListWithPaging(cri));
-		
+		model.addAttribute("pageMaker", new PageDTO(cri, 123));
 		return "board/list";
 	}
 	
