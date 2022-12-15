@@ -3,6 +3,7 @@ package org.joonzis.service;
 import java.util.List;
 
 import org.joonzis.domain.BoardVO;
+import org.joonzis.domain.Criteria;
 import org.joonzis.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,12 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardVO> getList() {
 		log.info("getList....."); // 로그를 찍어두는 습관을 가지자.
 		return mapper.getList();
+	}
+	
+	@Override
+	public List<BoardVO> getListWithPaging(Criteria cri) {
+		log.info("getListWithPaging....");
+		return mapper.getListWithPaging(cri);
 	}
 	
 	@Override

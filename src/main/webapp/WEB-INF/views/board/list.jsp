@@ -90,7 +90,7 @@
 			return;
 		}
 		//수정 및 삭제
-		if (result === 'sucess') {
+		if (result === 'success') {
 			alert('처리가 완료되었습니다.');
 			return;
 		}

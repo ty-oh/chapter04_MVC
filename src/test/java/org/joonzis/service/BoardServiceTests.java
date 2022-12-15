@@ -3,6 +3,7 @@ package org.joonzis.service;
 import java.util.List;
 
 import org.joonzis.domain.BoardVO;
+import org.joonzis.domain.Criteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,18 @@ public class BoardServiceTests {
 		}
 	}
 	*/
+	
+//	@Test
+//	public void testGetListWithPaging() {
+//		Criteria cri = new Criteria();
+//		cri.setAmount(10);
+//		cri.setPageNum(4);
+//		
+//		List<BoardVO> list = service.getListWithPaging(cri);
+//		for( BoardVO vo : list) {
+//			log.info(vo);
+//		}
+//	}
 	
 	/*
 	@Test

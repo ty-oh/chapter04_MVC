@@ -3,6 +3,7 @@ package org.joonzis.mapper;
 import java.util.List;
 
 import org.joonzis.domain.BoardVO;
+import org.joonzis.domain.Criteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,53 +34,66 @@ public class BoardMapperTests {
 	@Setter(onMethod_ = @Autowired)
 	private BoardVO vo;
 	
-	/*
-	@Test
-	public void testGetList() {
-		List<BoardVO> list = mapper.getList();
-		for(BoardVO vo : list) {
-			log.info(vo);
-		}
-	}
-	*/
-	/*
-	@Test
-	public void testInsert() {
-		//임시 데이터로 삽입 테스트 후 vo 출력
-		vo.setTitle("테스트용 제목");
-		vo.setContent("테스트용 내용");
-		vo.setWriter("테스트 작성자");
-		
-		mapper.insert(vo);
-		log.info(vo);
-		
-	}
-	*/
-	/*
-	@Test
-	public void testRead() {
-		long TestBno = 1;
-		vo = mapper.read(TestBno);
-		log.info(vo);
-	}
-	*/
-	/*
-	@Test
-	public void testUpdate() {
-		vo.setBno(1);
-		vo.setTitle("변경한 제목");
-		vo.setContent("변경한 내용");
-		vo.setWriter("변경한 작성자");
-		
-		int result = mapper.update(vo);
-		log.info(result);
-	}
-	*/
-	/*
-	@Test
-	public void testDelete() {
-		int result = mapper.delete(1);
-		log.info(result);
-	}
-	*/
+	
+//	@Test
+//	public void testGetList() {
+//		List<BoardVO> list = mapper.getList();
+//		for(BoardVO vo : list) {
+//			log.info(vo);
+//		}
+//	}
+	
+	
+//	@Test
+//	public void testGetListWithPaging() {
+//		Criteria cri = new Criteria();
+//		cri.setAmount(10);
+//		cri.setPageNum(4);
+//		
+//		List<BoardVO> list = mapper.getListWithPaging(cri);
+//		for(BoardVO board : list) {
+//			log.info(board);
+//		}
+//	}
+	
+	
+//	@Test
+//	public void testInsert() {
+//		//임시 데이터로 삽입 테스트 후 vo 출력
+//		vo.setTitle("테스트용 제목");
+//		vo.setContent("테스트용 내용");
+//		vo.setWriter("테스트 작성자");
+//		
+//		mapper.insert(vo);
+//		log.info(vo);
+//		
+//	}
+	
+	
+//	@Test
+//	public void testRead() {
+//		long TestBno = 1;
+//		vo = mapper.read(TestBno);
+//		log.info(vo);
+//	}
+	
+	
+//	@Test
+//	public void testUpdate() {
+//		vo.setBno(1);
+//		vo.setTitle("변경한 제목");
+//		vo.setContent("변경한 내용");
+//		vo.setWriter("변경한 작성자");
+//		
+//		int result = mapper.update(vo);
+//		log.info(result);
+//	}
+	
+	
+//	@Test
+//	public void testDelete() {
+//		int result = mapper.delete(1);
+//		log.info(result);
+//	}
+	
 }
