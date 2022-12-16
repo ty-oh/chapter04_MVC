@@ -35,10 +35,8 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button id="modalModBtn" class="btn btn-warning">수정</button>
-				<!-- <button id="modalRemoveBtn" class="btn btn-danger">삭제</button>
-				<button id="modalRegisterBtn" class="btn btn-primary">등록</button> -->
-				<button id="modalCloseBtn" class="btn btn-default">취소</button>
+				<button id="boardModBtn" class="btn btn-warning">글 내용 수정</button>
+				<button id="listMoveBtn" class="btn btn-default">목록 이동</button>
 			</div>
 			
 			<form action="/board/modify" method="get" id="operForm">
@@ -91,15 +89,15 @@
 			<div class = "modal-body">
 				<div class = "form-group">
 					<label>댓글</label>
-					<input class = "form-control" name = 'reply' value = 'New Reply!!!!'>
+					<input class = "form-control" name = 'reply' placeholder = 'New Reply!!!!'>
 				</div>
 				<div class = "form-group">
 					<label>작성자</label>
-					<input class = "form-control" name = 'replyer' value = 'replyer'>
+					<input class = "form-control" name = 'replyer' placeholder = 'replyer'>
 				</div>
 				<div class = "form-group">
 					<label>등록 날짜</label>
-					<input class = "form-control" name = 'replyDate' value = '' >
+					<input class = "form-control" name = 'replyDate' readonly="readonly">
 				</div>
 			</div>
 			<div class = "modal-footer">
@@ -119,12 +117,12 @@
 		// 화면 이동 스크립트 -------------------------------start
 		var operForm = $("#operForm");
 		
-		$("#modalModBtn").click(function(){
+		$("#boardModBtn").click(function(){
 			operForm.append('<input type="hidden" name="bno" value="'+${vo.bno }+'">');
 			operForm.submit();
 		});
 		
-		$("#modalCloseBtn").click(function(){
+		$("#listMoveBtn").click(function(){
 			operForm.attr("action", "/board/list");
 			operForm.submit();
 		});
@@ -143,7 +141,6 @@
 					var str = '';
 					const TIME_ZONE = 3240 * 10000;
 
-					
 					if (result == null || result.length==0) {
 						replyUl.html("");
 						return;
@@ -165,13 +162,43 @@
 			);
 		}
 		
-// 		replyService.add(
-// 			{reply:'JS TEST', replyer:'tester', bno:bnoValue},
-// 			function(result){
-// 				alert("result : " + result);
-// 			}
-// 		);
+		// 모달 창 관련 스크립트
+		var modal = $(".modal");
+		var modalInputReply = modal.find('input[name="reply"]');
+		var modalInputReplyer = modal.find('input[name="replyer"]');
+		var modalInputReplyDate = modal.find('input[name="replyDate"]');	//
 		
+		var modalModBtn = $("#modalModBtn");
+		var modalRemoveBtn = $("#modalRemoveBtn");
+		var modalRegisterBtn = $("#modalRegisterBtn");
+		
+		//댓글달기 버튼 클릭 이벤트
+		$("#addReplyBtn").on("click", function(){
+			modal.find('input').val('');						// 입력창 비우기
+			modalInputReplyDate.closest("div").hide();			// 날짜 입력창 숨기기 
+			modalModBtn.hide();									// 수정버튼 숨기기
+			modalRemoveBtn.hide();								// 삭제버튼 숨기기
+			
+			$(modalInputReplyDate).val(new Date());
+			
+			modal.modal("show");
+		});
+		
+		$("#modalCloseBtn").on("click", function() {
+			modal.modal("hide");
+		});
+		
+		$('#modalRegisterBtn').on("click", function() {
+			replyService.add(
+				{	reply: modalInputReply.val(),
+					replyer: modalInputReplyer.val(),
+					bno:bnoValue},
+				function(result){
+					showList();
+					modal.modal("hide");
+				}
+			);
+		});
 		
 		// 댓글 삭제
 // 		replyService.remove(
@@ -208,7 +235,6 @@
 // 			}
 // 		);
 	});
-	
 </script>
 
 <%@ include file="../include/footer.jsp" %>

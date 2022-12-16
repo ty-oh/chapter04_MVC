@@ -94,7 +94,16 @@
 			//<a> 클릭시 페이지 이동이 이루어지지 않게 하기 위해
 			e.preventDefault(); // 기본 href 경로 이동 방지
 			actionForm.attr('action', '/board/get');
-			actionForm.append('<input type="hidden" name="bno" value="'+$(this).attr('href')+'"/>');
+			
+			if($(actionForm).find('input[name="bno"]').length) {
+				var href = $(this).attr('href');
+				$(actionForm).find('input[name="bno"]').attr('value', href);
+				
+			} else {
+				actionForm.append('<input type="hidden" name="bno" value="'+$(this).attr('href')+'"/>');
+				
+			}
+			
 			actionForm.submit();
 		});
 		
