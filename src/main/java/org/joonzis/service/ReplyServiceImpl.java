@@ -24,24 +24,24 @@ public class ReplyServiceImpl implements ReplyService{
 
 	@Override
 	public ReplyVO get(long rno) {
-		return null;
+		log.info("get...." + rno);
+		return mapper.read(rno);
 	}
 	
 	@Override
 	public int register(ReplyVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		log.info("register" + vo);
+		return mapper.insert(vo);
 	}
 	
 	@Override
 	public int modify(ReplyVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		return mapper.update(vo);
 	}
 	
 	@Override
 	public int remove(long rno) {
-		// TODO Auto-generated method stub
-		return 0;
+		log.info("remove...." + rno);
+		return mapper.remove(rno);
 	}
 }
