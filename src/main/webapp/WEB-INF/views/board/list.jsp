@@ -35,7 +35,7 @@
 								<td><c:out value="${board.bno}"/></td>
 								<td>
 									<a class="move" href="${board.bno }">
-										<c:out value="${board.title }"/>
+										<c:out value="${board.title }"/><b> [${board.replycnt }]</b>
 									</a> 
 								</td>
 								<td><c:out value="${board.writer}"></c:out></td>
@@ -110,6 +110,7 @@
 		//-----------페이징---------------
 		$(".paginate_button a").click(function(e) {
 			e.preventDefault();
+			actionForm.attr('action', '/board/list');
 			actionForm.find("input[name='pageNum']").val($(this).attr('href'));
 			actionForm.submit();
 		});

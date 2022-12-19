@@ -2,6 +2,7 @@ package org.joonzis.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.joonzis.domain.BoardVO;
 import org.joonzis.domain.Criteria;
 
@@ -26,4 +27,8 @@ public interface BoardMapper {
 	
 	// 데이터 삭제 delete(long bno)
 	public int delete(long bno);
+	
+	//replycnt 값 변경
+	// Mapper의 매개변수는 원칙적으로 하나만 받을수 있으나 spring에서 @Param으로 여러개의 매개변수를 지원함. 
+	public void updateReplyCnt(@Param("bno") long bno, @Param("amount") int amount);
 }

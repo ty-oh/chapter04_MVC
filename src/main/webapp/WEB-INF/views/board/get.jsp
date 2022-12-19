@@ -10,7 +10,12 @@
 	<!-- /.col-lg-12 -->
 </div>
 <!-- /.row -->
-
+<!-- 
+	API
+	서버와 클라이언트 간에 데이터를 주고 받을때 그 방식을 규약해 놓은것.
+	ex) 네이버 map api 사용시 필요한 정보를 object에 담아서 보내주면, json형태로 결과값을 돌려준다.
+		이때 요청하는 양식과 응답받을 양식을 규약해 놓은것이 api이다. 
+ -->
 <div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
@@ -101,7 +106,6 @@
 				</div>
 			</div>
 			<div class = "modal-footer">
-				<input name="rno" type="hidden" value=""/>
 				<button id = 'modalModBtn' type = "button" class = "btn btn-warning">수정</button>
 				<button id = 'modalRemoveBtn' type = "button" class = "btn btn-danger">삭제</button>
 				<button id = 'modalRegisterBtn' type = "button" class = "btn btn-primary">등록</button>
@@ -165,7 +169,7 @@
 		
 		// 모달 창 관련 스크립트
 		var modal = $(".modal");
-		var modalInputRno = modal.find('input[name="rno"]')
+		var rno;
 		var modalInputReply = modal.find('input[name="reply"]');
 		var modalInputReplyer = modal.find('input[name="replyer"]');
 		var modalInputReplyDate = modal.find('input[name="replyDate"]');
@@ -173,18 +177,18 @@
 		var modalModBtn = $("#modalModBtn");
 		var modalRemoveBtn = $("#modalRemoveBtn");
 		var modalRegisterBtn = $("#modalRegisterBtn");
-		var rno;
 		
 		//댓글달기 버튼 클릭 이벤트
 		$("#addReplyBtn").on("click", function(){
 			modal.find('input').val('');						// 입력창 비우기
+			modal.find('h4').text('댓글 달기');
 			modalInputReplyDate.closest("div").hide();			// 날짜 입력창 숨기기 
 			modalModBtn.hide();									// 수정버튼 숨기기
 			modalRemoveBtn.hide();								// 삭제버튼 숨기기
 			modalRegisterBtn.show();
+			modalInputReplyer.removeAttr('readonly');
 			
 			$(modalInputReplyDate).val(new Date());
-			
 			modal.modal("show");
 		});
 		
@@ -196,7 +200,7 @@
 			var reply = {
 					reply: modalInputReply.val(),
 					replyer: modalInputReplyer.val(),
-					bno:bnoValue
+					bno:bnoValue,
 			};
 			
 			replyService.add(reply, function(result){
@@ -220,10 +224,11 @@
 		});
 		
 		$(modalRemoveBtn).on("click", function() {
-			//var rno = rno;
-			
-			replyService.remove(rno, function() {
-				alert('댓글을 삭제하였습니다.');
+			replyService.remove(rno, function(result) {
+				if(result === 'success'){
+					alert('댓글을 삭제하였습니다.');
+				}
+				
 				showList();
 				modal.modal("hide");
 			});
@@ -233,18 +238,10 @@
 		// on과 click 차이로 인해 시점문제가 발생할 수 있다.
 		// on의 두번째 매개변수를 통해서 시점을 뒤로 미룰수 있다.
 		$(replyUl).on("click", "li", function(e) {
-			//1. rno 가져오기
-			//2. rno 통해서 댓글 정보 db에서 가져오기
-			//3. 모달창에 데이터 출력하기
-			//	- 작성자, 내용, 작성 날짜
-			//4. 버튼
-			//  - 등록 버튼 숨기기
-			//  - 수정 버튼 보이기
-			//  - 삭제 버튼 보이기
 			rno = e.target.closest("li").dataset.rno;
-			
-			//모달창 초기화
+
 			modal.find('input').val('');						// 입력창 비우기
+			modal.find('h4').text('댓글 수정');
 			modalInputReplyer.attr('readonly', 'readonly');
 			modalInputReplyDate.closest("div").show();
 			modalModBtn.show();									// 수정버튼 숨기기
@@ -253,7 +250,6 @@
 			modal.modal("show");
 			
 			replyService.get(rno, function(result) {
-				modalInputRno.val(result.rno);
 				modalInputReply.val(result.reply);
 				modalInputReplyer.val(result.replyer);
 				modalInputReplyDate.val(displayTime(result.replyDate));
