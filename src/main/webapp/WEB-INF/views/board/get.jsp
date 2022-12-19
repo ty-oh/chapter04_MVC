@@ -101,6 +101,7 @@
 				</div>
 			</div>
 			<div class = "modal-footer">
+				<input name="rno" type="hidden" value=""/>
 				<button id = 'modalModBtn' type = "button" class = "btn btn-warning">수정</button>
 				<button id = 'modalRemoveBtn' type = "button" class = "btn btn-danger">삭제</button>
 				<button id = 'modalRegisterBtn' type = "button" class = "btn btn-primary">등록</button>
@@ -164,13 +165,15 @@
 		
 		// 모달 창 관련 스크립트
 		var modal = $(".modal");
+		var modalInputRno = modal.find('input[name="rno"]')
 		var modalInputReply = modal.find('input[name="reply"]');
 		var modalInputReplyer = modal.find('input[name="replyer"]');
-		var modalInputReplyDate = modal.find('input[name="replyDate"]');	//
+		var modalInputReplyDate = modal.find('input[name="replyDate"]');
 		
 		var modalModBtn = $("#modalModBtn");
 		var modalRemoveBtn = $("#modalRemoveBtn");
 		var modalRegisterBtn = $("#modalRegisterBtn");
+		var rno;
 		
 		//댓글달기 버튼 클릭 이벤트
 		$("#addReplyBtn").on("click", function(){
@@ -178,6 +181,7 @@
 			modalInputReplyDate.closest("div").hide();			// 날짜 입력창 숨기기 
 			modalModBtn.hide();									// 수정버튼 숨기기
 			modalRemoveBtn.hide();								// 삭제버튼 숨기기
+			modalRegisterBtn.show();
 			
 			$(modalInputReplyDate).val(new Date());
 			
@@ -189,15 +193,71 @@
 		});
 		
 		$('#modalRegisterBtn').on("click", function() {
-			replyService.add(
-				{	reply: modalInputReply.val(),
+			var reply = {
+					reply: modalInputReply.val(),
 					replyer: modalInputReplyer.val(),
-					bno:bnoValue},
-				function(result){
+					bno:bnoValue
+			};
+			
+			replyService.add(reply, function(result){
 					showList();
 					modal.modal("hide");
 				}
 			);
+		});
+		
+		$(modalModBtn).on("click", function() {
+			var reply = {
+					rno: rno,
+					reply: modalInputReply.val(),
+			}
+			
+			replyService.update(reply, function() {
+				alert('댓글을 수정하였습니다.');
+				showList();
+				modal.modal("hide");
+			});
+		});
+		
+		$(modalRemoveBtn).on("click", function() {
+			//var rno = rno;
+			
+			replyService.remove(rno, function() {
+				alert('댓글을 삭제하였습니다.');
+				showList();
+				modal.modal("hide");
+			});
+		});
+		
+		//()댓글 리스트 클릭 이벤트
+		// on과 click 차이로 인해 시점문제가 발생할 수 있다.
+		// on의 두번째 매개변수를 통해서 시점을 뒤로 미룰수 있다.
+		$(replyUl).on("click", "li", function(e) {
+			//1. rno 가져오기
+			//2. rno 통해서 댓글 정보 db에서 가져오기
+			//3. 모달창에 데이터 출력하기
+			//	- 작성자, 내용, 작성 날짜
+			//4. 버튼
+			//  - 등록 버튼 숨기기
+			//  - 수정 버튼 보이기
+			//  - 삭제 버튼 보이기
+			rno = e.target.closest("li").dataset.rno;
+			
+			//모달창 초기화
+			modal.find('input').val('');						// 입력창 비우기
+			modalInputReplyer.attr('readonly', 'readonly');
+			modalInputReplyDate.closest("div").show();
+			modalModBtn.show();									// 수정버튼 숨기기
+			modalRemoveBtn.show();
+			modalRegisterBtn.hide();
+			modal.modal("show");
+			
+			replyService.get(rno, function(result) {
+				modalInputRno.val(result.rno);
+				modalInputReply.val(result.reply);
+				modalInputReplyer.val(result.replyer);
+				modalInputReplyDate.val(displayTime(result.replyDate));
+			});
 		});
 		
 		// 댓글 삭제

@@ -30,7 +30,7 @@
 						<label>Writer</label>
 						<input class="form-control" name="writer"/>
 					</div>
-					<button class="btn btn-degault" type="submit">전송</button>
+					<button class="btn btn-degault" type="submit">등록</button>
 					<button class="btn btn-degault" type="reset">취소</button>
 				</form>
 			</div>
