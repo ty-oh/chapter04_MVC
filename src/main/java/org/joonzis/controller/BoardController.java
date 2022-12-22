@@ -1,9 +1,15 @@
 package org.joonzis.controller;
 
+import java.util.List;
+
+import org.joonzis.domain.BoardAttachVO;
 import org.joonzis.domain.BoardVO;
 import org.joonzis.domain.Criteria;
 import org.joonzis.domain.PageDTO;
 import org.joonzis.service.BoardService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
@@ -40,16 +47,28 @@ public class BoardController {
 	}
 	
 	@PostMapping("/register")
-	public String register(BoardVO vo, RedirectAttributes rttr) {
+	public String register(BoardVO vo, RedirectAttributes rttr, Criteria cri) {
 		log.info("register....." + vo);
 		service.register(vo);
+//		List<BoardAttachVO> list = vo.getAttachList();
+//		if(list.size()>0) {
+//			for(BoardAttachVO vo2 : list) {
+//				log.info("------filename	 : " + vo2.getFileName());
+//				log.info("------uploadPath	 : " + vo2.getUploadPath());
+//				log.info("------getUuid		 : " + vo2.getUuid());
+//			}
+//		}
 		
 		rttr.addFlashAttribute("result", "ok");
+		rttr.addAttribute("pageNum", cri.getPageNum());
+		rttr.addAttribute("amount", cri.getAmount());
+		
 		return "redirect:/board/list";
 	}
 	
 	@GetMapping("/register")
-	public String register() {
+	public String register(Model model, Criteria cri) {
+		model.addAttribute("cri", cri);
 		return "board/register";
 	}
 	
@@ -102,4 +121,11 @@ public class BoardController {
 		rttr.addAttribute("amount", cri.getAmount());
 		return "redirect:/board/list";
 	}
+	
+	@GetMapping(value="/getAttachList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<BoardAttachVO>> getAttachList(long bno) {
+		return new ResponseEntity<List<BoardAttachVO>>(service.getAttachList(bno), HttpStatus.OK);
+	}
+	
 }

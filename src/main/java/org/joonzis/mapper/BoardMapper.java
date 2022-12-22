@@ -13,8 +13,12 @@ public interface BoardMapper {
 	// 전체 목록 가져오기 (페이징 처리)
 	public List<BoardVO> getListWithPaging(Criteria cri);
 	
+	
 	// 테이블 내 전체 데이터 개수 구하기
 	public int getTotalCount();
+	
+	// 방금 생성한 게시글 Bno값 가져오기
+	public int getBno();
 	
 	//데이터 삽입
 	public void insert(BoardVO board);

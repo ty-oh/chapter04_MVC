@@ -83,12 +83,14 @@
 <script type="text/javascript">
 	//onload와 같은 jQuery 문법
 	$(function(){
+		var actionForm = $("#actionForm"); // 데이터 전송을 위한 form 태그
+
 		//addEventlistener("click", function() {})
 		$("#regBtn").click(function() {
-			location.href = '/board/register';
+			actionForm.attr('action', '/board/register')
+			actionForm.submit();
 		});
 		
-		var actionForm = $("#actionForm"); // 데이터 전송을 위한 form 태그
 		//-----------상세 보기 페이지 이동 클릭 이벤트
 		$(".move").click(function(e) {
 			//<a> 클릭시 페이지 이동이 이루어지지 않게 하기 위해

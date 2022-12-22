@@ -41,6 +41,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where bno = #{bno}
 	</select>
 	
+	<select id="getBno" resultType="int">
+<!-- 		select max(bno) -->
+<!-- 		from tbl_board -->
+		select bno
+		from (select bno
+			  from tbl_board
+			  order by bno desc)
+		where rownum=1
+	</select>
+	
+	
 	<!-- parameterType은 생략할수도 있다. -->
 	<insert id="insert">
 		insert into tbl_board(bno, title, content, writer)

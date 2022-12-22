@@ -82,6 +82,25 @@
 	<!-- ./end row -->
 </div>
 
+<!-- 첨부파일 -->
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">파일 첨부</div>
+			<!-- /.panel-heading -->
+			<div class="panel-body">
+				<div class="uploadResult">
+					<ul></ul>
+				</div>
+			</div>
+			<!-- /.panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+	<!-- /.col-lg-12 -->	
+</div>
+<!-- /.row -->
+
 <!-- Modal -->
 <div class="modal fade" id = "MyModal" tabindex = "-1" role = "dialog"
 	aria-labelledby = "myModalLabel" aria-hidden = "true">
@@ -121,6 +140,7 @@
 	$(function(){
 		// 화면 이동 스크립트 -------------------------------start
 		var operForm = $("#operForm");
+		var bnoValue = '${vo.bno}';
 		
 		$("#boardModBtn").click(function(){
 			operForm.append('<input type="hidden" name="bno" value="'+${vo.bno }+'">');
@@ -133,9 +153,35 @@
 		});
 		// 화면 이동 스크립트 -------------------------------end
 		
+		// 첨부파일 스크립트 ------------------------start
+		$.ajax({
+			url:"/board/getAttachList",
+			type:'get',
+			data: {bno:bnoValue},
+			contentType: 'application/json; charset=utf-8',
+			success : function(arr) {
+				var str = '';
+				
+				for(var i=0; i<arr.length; i++) {
+					var obj = arr[i];
+					var fileCallPath = encodeURIComponent(obj.uploadPath + "/" +
+															obj.uuid + "_" + 
+															obj.fileName);
+					
+					str += '<li data-path="'+ obj.uploadPath +'" data-uuid="'+ obj.uuid +'" data-filename="'+ obj.fileName +'">';
+					str += '<a href = "/download?fileName=' + fileCallPath + '">';
+					str += '<img src="/resources/img/attach.png" style="width:15px">' + obj.fileName;
+					str += '</a>';
+					str += '</li>';
+				}
+				
+				$('.uploadResult ul').append(str);
+			},
+			error: function() {}
+		});
+		// 첨부파일 스크립트 ------------------------end
 		
 		// 댓글 등록
-		var bnoValue = '${vo.bno}';
 		var replyUl = $(".chat");
 		
 		showList();

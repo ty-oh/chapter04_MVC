@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.joonzis.mapper.MemberMapper">
+	<!-- 두개의 테이블을 조인해서 mapper에서 사용하려면 resultMap을 만들어서 사용해야함-->
+	<resultMap type="org.joonzis.domain.MemberVO" id="memberMap">
+		<!-- result 태그
+			property: 필드명
+			column: db의 컬럼명
+		 -->
+		 <!-- collection 태그 
+		 	다른 vo를 List로 담은 필드를 사용할 때 List에 담을 vo를 resultMap에 담아서
+		 	collection으로 List필드에 할당할 수 있다.
+		  -->
+		<result property="userid" column="userid"/>
+		<result property="userpw" column="userpw"/>
+		<result property="username" column="username"/>
+		<result property="regdate" column="regdate"/>
+		<result property="updatedate" column="updatedate"/>
+		<collection property="authList" resultMap="authMap"></collection>
+	</resultMap>
+	<resultMap type="org.joonzis.domain.AuthVO" id="authMap">
+		<result property="auth" column="auth"/>
+		<result property="userid" column="userid"/>
+	</resultMap>
+	
+	<select id="read" resultMap="memberMap">
+		select mem.userid, userpw, username, regdate, updatedate, enabled, auth
+		from 
+    		tbl_member mem left join tbl_member_auth auth on mem.userid=auth.userid
+		where
+    		mem.userid=#{userid}
+	</select>
+</mapper>

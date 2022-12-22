@@ -49,9 +49,119 @@
 	<!-- /.col-lg-12 -->	
 </div>
 <!-- /.row -->
+<!-- 첨부파일 -->
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">파일 첨부</div>
+			<!-- /.panel-heading -->
+			<div class="panel-body">
+				<div class="form-group uploadDiv">
+					<input type="file" name="uploadFile" multiple="multiple">
+				</div>
+				<div class="uploadResult">
+					<ul></ul>
+				</div>
+			</div>
+			<!-- /.panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+	<!-- /.col-lg-12 -->	
+</div>
+<!-- /.row -->
 
 <script type="text/javascript">
+	// 첨부파일 스크립트 ------------------------start
 	$(function() {
+		var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$"); // 확장자를 제한하기 위한 정규식
+		var maxSize = 5*1024*1024; // 5mb 크기
+		
+		function checkExtension(fileName, fileSize) {
+			if(fileSize >= maxSize) {
+				alert("파일 사이즈 초과");
+				return false;
+			}
+			if(regex.test(fileName)) {
+				alert("해당 종류의 파일은 업로드 할 수 없습니다.");
+				return false;
+			}
+			return true;
+		} // end checkExtension();
+		
+		
+		$('input[type="file"]').on('change', function() {
+			var formData = new FormData(); // 스크립트에서 Form태그 생성
+			var inputFile = $('input[name="uploadFile"]');
+			var files = inputFile[0].files;
+			
+			for(var i=0; i<files.length; i++) {
+				if(!checkExtension(files[i].name, files[i].size)) {
+					return false;
+				}
+				
+				formData.append("uploadFile", files[i]);
+			}
+			
+			$.ajax({
+				url: '/uploadAjaxAction',
+				processData: false,			//
+				contentType: false,			//
+				data: formData,
+				type: 'post',
+				dataType: 'json',
+				success: function(result) {
+					console.log(result);
+					showUploadFile(result);
+				}
+			});
+		});
+	
+		var bnoValue = '${vo.bno}';
+		var uploadResult = $('.uploadResult ul');
+		$.ajax({
+			url:"/board/getAttachList",
+			type:'get',
+			data: {bno:bnoValue},
+			contentType: 'application/json; charset=utf-8',
+			success : function(arr) {
+				var str = '';
+				
+				for(var i=0; i<arr.length; i++) {
+					var obj = arr[i];
+					var fileCallPath = encodeURIComponent(obj.uploadPath + "/" +
+															obj.uuid + "_" + 
+															obj.fileName);
+					
+					str += '<li data-path="'+ obj.uploadPath +'" data-uuid="'+ obj.uuid +'" data-filename="'+ obj.fileName +'">';
+					str += '<img src="/resources/img/attach.png" style="width:15px">' + obj.fileName;
+					str += '<span data-file="' + fileCallPath + '"> X </span>';
+					str += '</li>';
+				}
+				
+				uploadResult.html(str);
+			},
+			error: function() {}
+		});
+	
+		uploadResult.on("click", "span", function() {
+			var targetFile = $(this).data("file");
+			var targetLi = $(this).closest("li");
+			
+			$.ajax({
+				url: "/deleteFile",
+				data: {fileName: targetFile},
+				type: "post",
+				dataType: "text",
+				success: function(result) {
+					targetLi.remove();
+				}
+			});
+		});
+	
+	
+	// 첨부파일 스크립트 ------------------------end
+
 		var operForm = $("#operForm");
 		
 		$("button").on("click", function(e) {
