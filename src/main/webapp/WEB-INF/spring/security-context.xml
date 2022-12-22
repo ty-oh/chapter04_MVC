@@ -28,13 +28,19 @@
 	<!-- 	<security:form-login/> -->
 	<security:form-login login-page="/customLogin"
 		authentication-success-handler-ref="customLoginSuccess"/>
-	<!-- invalidate-session="true" 로그아웃시 세션을 지워주는 옵션이다.-->
-	<security:logout logout-url="/customLogout" invalidate-session="true"/>
+	<!-- 
+		invalidate-session="true" 로그아웃시 세션을 지워주는 옵션이다.
+		delete-cookies="" 로그아웃시 쿠키를 지워주는 옵션. remember-me등에 활용
+	-->
+	<security:logout logout-url="/customLogout" invalidate-session="true" delete-cookies="remember-me"/>
 	
 	<!-- access 권한 없을때 에러가 발생하면 해당 페이지로 보냄-->
 	<security:access-denied-handler ref="customAccessDenied"/>
 	
 	<security:csrf disabled="true"/>
+	
+	<!-- DB를 이용한 자동 로그인 604800=일주일 -->
+	<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 </security:http>
 
 <!-- 인증 관리 -->
