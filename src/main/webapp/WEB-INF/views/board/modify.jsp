@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../include/header.jsp" %>
 
 <div class="row">
@@ -36,9 +37,15 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-warning" type="submit" data-oper="modify">글 수정</button>
-					<button class="btn btn-danger" type="submit" data-oper="remove">글 삭제</button>
+					<sec:authentication property="principal" var="pinfo"/>
+					<sec:authorize access="isAuthenticated()">
+						<c:if test="${pinfo.username eq vo.writer }">
+							<button class="btn btn-warning" type="submit" data-oper="modify">글 수정</button>
+							<button class="btn btn-danger" type="submit" data-oper="remove">글 삭제</button>
+						</c:if>
+					</sec:authorize>
 					<button class="btn btn-primary" type="submit" data-oper="list">목록</button>
+					<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
 				</div>
 			</form>
 			

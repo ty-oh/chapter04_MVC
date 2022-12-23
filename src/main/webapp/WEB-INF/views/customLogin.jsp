@@ -16,13 +16,13 @@
 
     <!-- Custom Fonts -->
     <link href="/resources/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<style type="text/css">
-	.wrap-div{
-		width: 500px;
-		margin: auto;
-		text-align: center;
-	}
-</style>
+	<style type="text/css">
+		.wrap-div{
+			width: 500px;
+			margin: auto;
+			text-align: center;
+		}
+	</style>
 </head>
 <body>
 	<div class="wrap-div">

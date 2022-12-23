@@ -26,8 +26,9 @@
 	<security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
 	
 	<!-- 	<security:form-login/> -->
-	<security:form-login login-page="/customLogin"
-		authentication-success-handler-ref="customLoginSuccess"/>
+	<security:form-login login-page="/customLogin"/>
+	
+<!-- 		authentication-success-handler-ref="customLoginSuccess" -->
 	<!-- 
 		invalidate-session="true" 로그아웃시 세션을 지워주는 옵션이다.
 		delete-cookies="" 로그아웃시 쿠키를 지워주는 옵션. remember-me등에 활용

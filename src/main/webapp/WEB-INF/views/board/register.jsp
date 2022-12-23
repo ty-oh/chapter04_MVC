@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../include/header.jsp" %>
+
 
 <div class="row">
 	<div class="col-lg-12">
@@ -28,7 +30,8 @@
 					</div>
 					<div class="form-group">
 						<label>Writer</label>
-						<input class="form-control" name="writer"/>
+						<input class="form-control" name="writer"
+							 value='<sec:authentication property="principal.username"/>' readonly="readonly"/>
 					</div>
 					
 					<input type="hidden" name="pageNum" value="${cri.pageNum }"/>
@@ -36,6 +39,9 @@
 					<button class="btn btn-primary" data-oper="register">등록</button>
 					<button class="btn btn-info" data-oper="reset">취소</button>
 					<button class="btn btn-success" data-oper="list">목록으로 이동</button>
+					<!-- security 를 사용해서 post로 던질때는 항상 _csrf -->
+					<!-- 로그인을 해야 접근할수 있는 상황에서는 함께 써주도록 하자 -->
+					<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
 				</form>
 			</div>
 			<!-- /.panel-body -->

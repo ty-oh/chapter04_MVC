@@ -10,6 +10,7 @@ import org.joonzis.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,18 +47,11 @@ public class BoardController {
 		return "board/list";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
 	public String register(BoardVO vo, RedirectAttributes rttr, Criteria cri) {
 		log.info("register....." + vo);
 		service.register(vo);
-//		List<BoardAttachVO> list = vo.getAttachList();
-//		if(list.size()>0) {
-//			for(BoardAttachVO vo2 : list) {
-//				log.info("------filename	 : " + vo2.getFileName());
-//				log.info("------uploadPath	 : " + vo2.getUploadPath());
-//				log.info("------getUuid		 : " + vo2.getUuid());
-//			}
-//		}
 		
 		rttr.addFlashAttribute("result", "ok");
 		rttr.addAttribute("pageNum", cri.getPageNum());
@@ -66,6 +60,7 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/register")
 	public String register(Model model, Criteria cri) {
 		model.addAttribute("cri", cri);
@@ -80,6 +75,7 @@ public class BoardController {
 		return "/board/get";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/modify")
 	public String modify(@RequestParam("bno") long bno,
 						 @ModelAttribute("cri") Criteria cri , Model model) {
@@ -92,6 +88,8 @@ public class BoardController {
 	// list에 가기 전에 result값을 success를 넣어주도록 하자
 	// @GetMapping 의 리턴값은 jsp이다.
 	// @PostMapping의 리턴은 url이다.
+	// 메소드 실행 전, 로그인 한 사용자와 파라미터로 전달되는 작성자가 일치하는지 체크
+	@PreAuthorize("principal.username == #vo.writer")
 	@PostMapping("/modify")
 	public String modify(BoardVO vo, Criteria cri, RedirectAttributes rttr) {
 		log.info("/modify...." + vo);
@@ -107,8 +105,9 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
+	@PreAuthorize("principal.username == #writer")
 	@PostMapping("/remove")
-	public String remove(long bno, Criteria cri, RedirectAttributes rttr) {
+	public String remove(long bno, Criteria cri, RedirectAttributes rttr, String writer) {
 		log.info("remove...");
 		
 		boolean result = service.remove(bno);

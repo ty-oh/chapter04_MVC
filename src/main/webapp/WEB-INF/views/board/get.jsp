@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../include/header.jsp" %>
 
 <div class="row">
@@ -40,7 +41,14 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button id="boardModBtn" class="btn btn-warning">글 내용 수정</button>
+				<!-- 글 수정 security 관리 -->
+				<!-- security context에서 principal 객체를 pinfo 변수에 저장함 -->
+				<sec:authentication property="principal" var="pinfo"/>
+				<sec:authorize access="isAuthenticated()">
+					<c:if test="${pinfo.username eq vo.writer }">
+						<button id="boardModBtn" class="btn btn-warning">글 내용 수정</button>
+					</c:if>
+				</sec:authorize>
 				<button id="listMoveBtn" class="btn btn-default">목록 이동</button>
 			</div>
 			
@@ -65,7 +73,9 @@
 			<div class= "panel-heading">
 				<i class = "fa fa-comments fa-fw"></i> 댓글
 				<sec:authorize access="isAuthenticated()">
-					<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">댓글 달기</button>
+					<c:if test="${not empty pinfo.username}">
+						<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">댓글 달기</button>
+					</c:if>
 				</sec:authorize>
 			</div>
 			<!-- /.panel-heading -->
@@ -224,6 +234,9 @@
 		var modalRemoveBtn = $("#modalRemoveBtn");
 		var modalRegisterBtn = $("#modalRegisterBtn");
 		
+		//html태그를 그냥 쓸수 있다.
+		var principal = '<sec:authorize access="isAuthenticated()"><sec:authentication property="principal.username"/></sec:authorize>';
+		
 		//댓글달기 버튼 클릭 이벤트
 		$("#addReplyBtn").on("click", function(){
 			modal.find('input').val('');						// 입력창 비우기
@@ -231,8 +244,9 @@
 			modalInputReplyDate.closest("div").hide();			// 날짜 입력창 숨기기 
 			modalModBtn.hide();									// 수정버튼 숨기기
 			modalRemoveBtn.hide();								// 삭제버튼 숨기기
-			modalRegisterBtn.show();
-			modalInputReplyer.removeAttr('readonly');
+			modalRegisterBtn.show();			
+			
+			modalInputReplyer.val(principal).attr("readonly", "readonly");
 			
 			$(modalInputReplyDate).val(new Date());
 			modal.modal("show");
